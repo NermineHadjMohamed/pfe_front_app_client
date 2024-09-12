@@ -5,7 +5,6 @@ import 'package:client_app/main.dart';
 import 'package:client_app/models/cart.dart';
 import 'package:client_app/models/category.dart';
 import 'package:client_app/models/login_response_model.dart';
-import 'package:client_app/models/order_payment.dart';
 import 'package:client_app/models/product.dart';
 import 'package:client_app/models/product_filter.dart';
 import 'package:client_app/utils/shared_service.dart';
@@ -248,91 +247,44 @@ class APIService {
       return null;
     }
   }
-
-  Future<Map<String, dynamic>> processPayment(
-    cardHolderName,
-    cardNumber,
-    cardExpMonth,
-    cardExpYear,
-    cardCVC,
-    amount,
+Future<Map<String, dynamic>> createOrder(
+    String userId,
+    double grandTotal,
+    String orderStatus,
+    List<dynamic> products,
   ) async {
-    var loginDetails = await SharedService.loginDetails();
-    Map<String, String> requestHeaders = {
-      'Content-Type': 'application/json',
-      'Authorization': 'Basic ${loginDetails?.data.token.toString()}'
-    };
-
     var url = Uri.https(Config.apiURL, Config.orderAPI);
-
-    var response = await client.post(
+    var  response = await client.post(
       url,
-      headers: requestHeaders,
-      body: jsonEncode(
-        {
-          "card_Name": cardHolderName,
-          "card_Number": cardNumber,
-          "card_ExpMonth": cardExpMonth,
-          "card_ExpYear": cardExpYear,
-          "card_CVC": cardCVC,
-          "amount": amount,
-        },
-      ),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'userId': userId,
+        'grandTotal': grandTotal,
+        'orderStatus': orderStatus,
+        'products': products,
+      }),
     );
 
-    Map<String, dynamic> resModel = {};
-
     if (response.statusCode == 200) {
-      var data = jsonDecode(response.body);
-
-      resModel["message"] = "success";
-      resModel["data"] = OrderPayment.fromJson(data["data"]);
-    } else if (response.statusCode == 401) {
-      navigatorKey.currentState?.pushNamedAndRemoveUntil(
-        "/login",
-        (route) => false,
-      );
+      return jsonDecode(response.body);
     } else {
-      var data = jsonDecode(response.body);
-      resModel["message"] = data["message"];
+      throw Exception('Failed to create order');
     }
-
-    return resModel;
   }
 
-  Future<bool?> updateOrder(
-    orderId,
-    transactionId,
-  ) async {
-    var loginDetails = await SharedService.loginDetails();
-    Map<String, String> requestHeaders = {
-      'Content-Type': 'application/json',
-      'Authorization': 'Basic ${loginDetails?.data.token.toString()}'
-    };
-
+  // Method to update an order
+  Future<bool> updateOrder(String orderId, String transactionId) async {
     var url = Uri.https(Config.apiURL, Config.orderAPI);
-
     var response = await client.put(
       url,
-      headers: requestHeaders,
-      body: jsonEncode(
-        {
-          "orderId": orderId,
-          "status": "Success",
-          "transaction_id": transactionId,
-        },
-      ),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'status': 'Success',
+        'transaction_id': transactionId,
+      }),
     );
 
-    if (response.statusCode == 200) {
-      return true;
-    } else if (response.statusCode == 401) {
-      navigatorKey.currentState?.pushNamedAndRemoveUntil(
-        "/login",
-        (route) => false,
-      );
-    } else {
-      return false;
-    }
+    return response.statusCode == 200;
   }
+  
 }

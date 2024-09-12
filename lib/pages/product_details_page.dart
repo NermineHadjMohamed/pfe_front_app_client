@@ -94,21 +94,6 @@ class _ProductDetailsPageState extends ConsumerState<ProductDetailsPage> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              TextButton.icon(
-                onPressed: () {},
-                icon: const Icon(
-                  Icons.share,
-                  color: Colors.black,
-                  size: 20,
-                ),
-                label: const Text(
-                  "SHARE",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 13,
-                  ),
-                ),
-              ),
             ],
           ),
           //const SizedBox(height: 10),
@@ -122,7 +107,9 @@ class _ProductDetailsPageState extends ConsumerState<ProductDetailsPage> {
                 iconSize: 20.0,
                 value: quantity,
                 onChanged: (value) {
-                  quantity = value["quantity"];
+                  setState(() {
+                    quantity = value["quantity"];
+                  });
                 },
               )
             ],

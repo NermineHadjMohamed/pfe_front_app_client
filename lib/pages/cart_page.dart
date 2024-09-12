@@ -115,7 +115,7 @@ class _checkoutBottomNavbar extends ConsumerWidget {
                           ),
                         ),
                         onTap: () {
-                          Navigator.of(context).pushNamed("/payments");
+                          //Navigator.of(context).pushNamed("/payments");
                         },
                       ),
                     ],

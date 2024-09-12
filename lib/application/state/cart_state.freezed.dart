@@ -19,7 +19,9 @@ mixin _$CartState {
   Cart? get cartModel => throw _privateConstructorUsedError;
   bool get isLoading => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of CartState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $CartStateCopyWith<CartState> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -44,6 +46,8 @@ class _$CartStateCopyWithImpl<$Res, $Val extends CartState>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of CartState
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -62,6 +66,8 @@ class _$CartStateCopyWithImpl<$Res, $Val extends CartState>
     ) as $Val);
   }
 
+  /// Create a copy of CartState
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $CartCopyWith<$Res>? get cartModel {
@@ -97,6 +103,8 @@ class __$$CarteStateImplCopyWithImpl<$Res>
       _$CarteStateImpl _value, $Res Function(_$CarteStateImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of CartState
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -146,7 +154,9 @@ class _$CarteStateImpl implements _CarteState {
   @override
   int get hashCode => Object.hash(runtimeType, cartModel, isLoading);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of CartState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$CarteStateImplCopyWith<_$CarteStateImpl> get copyWith =>
@@ -161,8 +171,11 @@ abstract class _CarteState implements CartState {
   Cart? get cartModel;
   @override
   bool get isLoading;
+
+  /// Create a copy of CartState
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$CarteStateImplCopyWith<_$CarteStateImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

@@ -1,14 +1,13 @@
 // category_provider.dart
 import 'package:client_app/api/api_service.dart';
 import 'package:client_app/application/notifier/cart_notifier.dart';
-import 'package:client_app/application/notifier/order_payment_notifier.dart';
+import 'package:client_app/application/notifier/order_notifier.dart';
 import 'package:client_app/application/notifier/product_filter_notifier.dart';
 import 'package:client_app/application/notifier/products_notifier.dart';
 import 'package:client_app/application/state/cart_state.dart';
-import 'package:client_app/application/state/order_payment_state.dart';
+import 'package:client_app/application/state/order_state.dart';
 import 'package:client_app/application/state/product_state.dart';
 import 'package:client_app/models/category.dart';
-import 'package:client_app/models/order_payment.dart';
 import 'package:client_app/models/pagination.dart';
 import 'package:client_app/models/product.dart';
 import 'package:client_app/models/product_filter.dart';
@@ -63,9 +62,9 @@ final cartItemsProvider = StateNotifierProvider<CartNotifier, CartState>(
   ),
 );
 
-final OrderPaymentProvider =
-    StateNotifierProvider<OrderPaymentNotifier, OrderPaymentState>(
-  (ref) => OrderPaymentNotifier(
+final OrderProvider =
+    StateNotifierProvider<OrderNotifier, OrderState>(
+  (ref) => OrderNotifier(
     ref.watch(apiService),
   ),
 );

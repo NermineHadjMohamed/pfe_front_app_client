@@ -20,7 +20,9 @@ mixin _$ProductFilterModel {
   String? get categoryId => throw _privateConstructorUsedError;
   String? get sortBy => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ProductFilterModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $ProductFilterModelCopyWith<ProductFilterModel> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -47,6 +49,8 @@ class _$ProductFilterModelCopyWithImpl<$Res, $Val extends ProductFilterModel>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of ProductFilterModel
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -70,6 +74,8 @@ class _$ProductFilterModelCopyWithImpl<$Res, $Val extends ProductFilterModel>
     ) as $Val);
   }
 
+  /// Create a copy of ProductFilterModel
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $PaginationModelCopyWith<$Res> get paginationModel {
@@ -102,6 +108,8 @@ class __$$ProductFilterModelImplCopyWithImpl<$Res>
       $Res Function(_$ProductFilterModelImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of ProductFilterModel
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -160,7 +168,9 @@ class _$ProductFilterModelImpl implements _ProductFilterModel {
   int get hashCode =>
       Object.hash(runtimeType, paginationModel, categoryId, sortBy);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ProductFilterModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$ProductFilterModelImplCopyWith<_$ProductFilterModelImpl> get copyWith =>
@@ -180,8 +190,11 @@ abstract class _ProductFilterModel implements ProductFilterModel {
   String? get categoryId;
   @override
   String? get sortBy;
+
+  /// Create a copy of ProductFilterModel
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ProductFilterModelImplCopyWith<_$ProductFilterModelImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

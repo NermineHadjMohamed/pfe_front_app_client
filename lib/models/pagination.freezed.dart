@@ -19,7 +19,9 @@ mixin _$PaginationModel {
   int get page => throw _privateConstructorUsedError;
   int get pageSize => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of PaginationModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $PaginationModelCopyWith<PaginationModel> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -43,6 +45,8 @@ class _$PaginationModelCopyWithImpl<$Res, $Val extends PaginationModel>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of PaginationModel
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -81,6 +85,8 @@ class __$$PaginationModelImplCopyWithImpl<$Res>
       _$PaginationModelImpl _value, $Res Function(_$PaginationModelImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of PaginationModel
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -128,7 +134,9 @@ class _$PaginationModelImpl implements _PaginationModel {
   @override
   int get hashCode => Object.hash(runtimeType, page, pageSize);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of PaginationModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$PaginationModelImplCopyWith<_$PaginationModelImpl> get copyWith =>
@@ -145,8 +153,11 @@ abstract class _PaginationModel implements PaginationModel {
   int get page;
   @override
   int get pageSize;
+
+  /// Create a copy of PaginationModel
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$PaginationModelImplCopyWith<_$PaginationModelImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

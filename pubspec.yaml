@@ -37,7 +37,6 @@ dependencies:
   cupertino_icons: 
   snippet_coder_utils:
   api_cache_manager:
-  flutter_stripe: ^9.0.0
   
 
 dev_dependencies:
