@@ -169,47 +169,104 @@ class APIService {
       return null;
     }
   }
-
-  Future<bool?> addCartItem(productId, quantity) async {
+  Future<bool?> addCartItem(String productId, int quantity) async {
     try {
-      var loginDetails = await SharedService.loginDetails();
+      var loginDetails = await SharedService
+          .loginDetails(); // Récupérer les détails de l'utilisateur connecté
 
-      Map<String, String> requestHeaders = {
-        'Content-Type': 'application/json',
-        'Authorization': 'Basic ${loginDetails!.data.token.toString()}'
-      };
+      if (loginDetails != null) {
+        print(
+            'Login details: ${loginDetails.data}'); // Ajouter un log pour vérifier les détails du login
 
-      var url = Uri.https(Config.apiURL, Config.cartAPI);
+        String? userId = loginDetails.data.userId; // Extraire le userId
+        print('UserId: $userId'); // Loguer le userId pour voir s'il est correct
 
-      var response = await client.post(
-        url,
-        headers: requestHeaders,
-        body: jsonEncode(
-          {
-            "products": [
-              {
-                "product": productId,
-                "quantity": quantity,
-              }
-            ]
-          },
-        ),
-      );
+        Map<String, String> requestHeaders = {
+          'Content-Type': 'application/json',
+          'Authorization':
+              'Basic ${loginDetails.data.token.toString()}', // Token d'autorisation
+        };
 
-      if (response.statusCode == 200) {
-        return true;
-      } else if (response.statusCode == 401) {
-        navigatorKey.currentState?.pushNamedAndRemoveUntil(
-          "/login",
-          (route) => false,
+        var url = Uri.https(
+            Config.apiURL, Config.cartAPI); // Construire l'URL de l'API
+
+        var response = await client.post(
+          url,
+          headers: requestHeaders,
+          body: jsonEncode(
+            {
+              "userId": userId, // Inclure le userId dans le corps de la requête
+              "products": [
+                {
+                  "product": productId,
+                  "quantity": quantity,
+                }
+              ]
+            },
+          ),
         );
+
+        if (response.statusCode == 200) {
+          return true; // L'ajout au panier a réussi
+        } else if (response.statusCode == 401) {
+          // Redirection si l'utilisateur n'est pas autorisé
+          navigatorKey.currentState?.pushNamedAndRemoveUntil(
+            "/login",
+            (route) => false,
+          );
+        } else {
+          return null;
+        }
       } else {
-        return null;
+        print('Login details are null');
+        return null; // Gestion si loginDetails est null
       }
     } catch (error) {
-      print(error);
+      print('Error: $error');
+      return null;
     }
   }
+
+  // Future<bool?> addCartItem(productId, quantity) async {
+  //   try {
+  //     var loginDetails = await SharedService.loginDetails();
+
+  //     Map<String, String> requestHeaders = {
+  //       'Content-Type': 'application/json',
+  //       'Authorization': 'Basic ${loginDetails!.data.token.toString()}'
+  //     };
+
+  //     var url = Uri.https(Config.apiURL, Config.cartAPI);
+
+  //     var response = await client.post(
+  //       url,
+  //       headers: requestHeaders,
+  //       body: jsonEncode(
+  //         {
+  //           "products": [
+  //             {
+  //               "product": productId,
+  //               "quantity": quantity,
+  //             }
+  //           ]
+  //         },
+  //       ),
+  //     );
+
+  //     if (response.statusCode == 200) {
+  //       return true;
+  //     } else if (response.statusCode == 401) {
+  //       navigatorKey.currentState?.pushNamedAndRemoveUntil(
+  //         "/login",
+  //         (route) => false,
+  //       );
+  //     } else {
+  //       return null;
+  //     }
+  //   } catch (error) {
+  //     print(error);
+  //   }
+  // }
 
   Future<bool?> removeCartItem(productId, quantity) async {
     var loginDetails = await SharedService.loginDetails();
@@ -247,14 +304,15 @@ class APIService {
       return null;
     }
   }
-Future<Map<String, dynamic>> createOrder(
+
+  Future<Map<String, dynamic>> createOrder(
     String userId,
     double grandTotal,
     String orderStatus,
     List<dynamic> products,
   ) async {
     var url = Uri.https(Config.apiURL, Config.orderAPI);
-    var  response = await client.post(
+    var response = await client.post(
       url,
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
@@ -286,5 +344,4 @@ Future<Map<String, dynamic>> createOrder(
 
     return response.statusCode == 200;
   }
-  
 }

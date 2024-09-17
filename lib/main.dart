@@ -9,7 +9,6 @@ import 'package:client_app/utils/shared_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-
 GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 Widget _defaultHome = const LoginPage();
@@ -22,7 +21,6 @@ void main() async {
     _defaultHome = const DashboardPage();
   }
 
-  
   runApp(
     ProviderScope(
       child: MyApp(),
@@ -31,28 +29,42 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  MyApp({Key, key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      //home: const RegisterPage(),
-      navigatorKey: navigatorKey,
-      routes: <String, WidgetBuilder>{
-        '/': (context) => _defaultHome,
-        '/register': (BuildContext context) => const RegisterPage(),
-        '/home': (BuildContext context) => const HomePage(),
-        '/login': (BuildContext context) => const LoginPage(),
-        '/products': (BuildContext context) => const ProductsPage(),
-        '/product-details': (BuildContext context) =>
-            const ProductDetailsPage(),
-        //'/order': (context) => const OrderSuccess(),
-        '/order-success': (context) => const OrderSuccess(),
+    return FutureBuilder<bool>(
+      future: SharedService.isLoggedIn(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            theme: ThemeData(
+              primarySwatch: Colors.blue,
+            ),
+            home: Scaffold(body: Center(child: CircularProgressIndicator())),
+          );
+        }
+
+        final bool isLoggedIn = snapshot.data ?? false;
+
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'Flutter Demo',
+          theme: ThemeData(
+            primarySwatch: Colors.blue,
+          ),
+          navigatorKey: navigatorKey,
+          routes: <String, WidgetBuilder>{
+            '/': (context) =>
+                isLoggedIn ? const DashboardPage() : const LoginPage(),
+            '/register': (BuildContext context) => const RegisterPage(),
+            '/home': (BuildContext context) => const HomePage(),
+            '/login': (BuildContext context) => const LoginPage(),
+            '/products': (BuildContext context) => const ProductsPage(),
+            '/product-details': (BuildContext context) =>
+                const ProductDetailsPage(),
+            '/order-success': (context) => const OrderSuccess(),
+          },
+        );
       },
     );
   }

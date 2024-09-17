@@ -174,7 +174,7 @@ class _LoginPageState extends State<LoginPage> {
                             Navigator.of(context).pop();
                             Navigator.pushNamedAndRemoveUntil(
                               context,
-                              "/home",
+                              "/",
                               (route) => false,
                             );
                           },

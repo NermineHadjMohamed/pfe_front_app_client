@@ -32,16 +32,18 @@ class _ProductDetailsPageState extends ConsumerState<ProductDetailsPage> {
   }
 
   @override
-  void didChangeDependencies() {
-    final Map? arguments = ModalRoute.of(context)!.settings.arguments as Map;
 
-    if (arguments != null) {
+  void didChangeDependencies() {
+    final arguments = ModalRoute.of(context)!.settings.arguments;
+
+    if (arguments != null && arguments is Map) {
       productId = arguments["productId"];
       print(productId);
     }
 
     super.didChangeDependencies();
   }
+
 
   Widget _productDetails(WidgetRef ref) {
     final details = ref.watch(productDetailsProvider(productId));
@@ -120,7 +122,7 @@ class _ProductDetailsPageState extends ConsumerState<ProductDetailsPage> {
               cartViewModel.addCartItem(model.id, quantity);
             },
             style: ButtonStyle(
-              backgroundColor: WidgetStateProperty.all(Colors.green),
+              backgroundColor: MaterialStateProperty.all(Colors.green),
             ),
             icon: const Icon(
               Icons.shopping_basket,

@@ -9,7 +9,8 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class HomeProductsWidget extends ConsumerWidget {
-  const HomeProductsWidget({Key, key}) : super(key: key);
+  const HomeProductsWidget({Key? key}) : super(key: key);
+
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -54,14 +55,20 @@ class HomeProductsWidget extends ConsumerWidget {
 
     return products.when(
       data: (list) {
-        return _buildProductList(list!);
+        // Vérifier si la liste est null ou vide
+        if (list == null || list.isEmpty) {
+          return Center(child: Text("No products available")); // Gestion des cas où la liste est vide
+        }
+        
+        return _buildProductList(list); // Pas besoin du !
       },
       error: (_, __) {
-        return Center(child: Text("ERROR")); // Ensure returning a Widget
+        return Center(child: Text("ERROR")); // Assurez-vous de retourner un Widget ici aussi
       },
       loading: () => Center(child: CircularProgressIndicator()),
     );
   }
+
 
   Widget _buildProductList(List<Product> products) {
     return Container(

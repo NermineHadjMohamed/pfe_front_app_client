@@ -1,3 +1,4 @@
+import 'package:client_app/api/api_service.dart';
 import 'package:client_app/application/state/cart_state.dart';
 import 'package:client_app/config.dart';
 import 'package:client_app/models/cart.dart';
@@ -88,38 +89,70 @@ class _checkoutBottomNavbar extends ConsumerWidget {
     if (cartProvider.cartModel != null) {
       return cartProvider.cartModel!.products.isNotEmpty
           ? Container(
-              child: Container(
-                height: 50,
-                decoration: BoxDecoration(
-                    color: Colors.green,
-                    borderRadius: BorderRadius.circular(10)),
-                child: Padding(
-                  padding: EdgeInsets.all(8),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "Total: ${Config.currency}${cartProvider.cartModel!.gransTotal.toString()}",
-                        style: const TextStyle(
+              height: 50,
+              decoration: BoxDecoration(
+                color: Colors.green,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Padding(
+                padding: EdgeInsets.all(8),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Total: ${Config.currency}${cartProvider.cartModel!.grandTotal.toString()}",
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    GestureDetector(
+                      child: Text(
+                        "Pass Order",
+                        style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
+                          fontSize: 15,
                         ),
                       ),
-                      GestureDetector(
-                        child: Text(
-                          "Procced to Checkout",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 15,
-                          ),
-                        ),
-                        onTap: () {
-                          //Navigator.of(context).pushNamed("/payments");
-                        },
-                      ),
-                    ],
-                  ),
+                      onTap: () async {
+                        try {
+                          // Show loading spinner (optional)
+                          showDialog(
+                            context: context,
+                            barrierDismissible: false,
+                            builder: (context) {
+                              return const Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            },
+                          );
+
+                          // Call the APIService to create the order
+                          await createOrderAPI(
+                            cartProvider.cartModel!.userId, // Pass userId
+                            cartProvider.cartModel!.grandTotal, // Grand total
+                            'created', // Initial order status
+                            cartProvider.cartModel!.products, // List of products
+                          );
+
+                          // Close the loading spinner
+                          Navigator.of(context).pop(); 
+
+                          // Navigate to the Order Success Page
+                          Navigator.of(context).pushNamed("/order-success");
+                        } catch (error) {
+                          // Close the loading spinner
+                          Navigator.of(context).pop(); 
+                          
+                          // Show an error message if the order creation fails
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text("Order creation failed: $error")),
+                          );
+                        }
+                      },
+                    ),
+                  ],
                 ),
               ),
             )
@@ -127,5 +160,26 @@ class _checkoutBottomNavbar extends ConsumerWidget {
     }
 
     return const SizedBox();
+  }
+
+  // Helper function to create the order using the APIService
+  Future<void> createOrderAPI(
+      String userId, double grandTotal, String orderStatus, List<CartProduct> products) async {
+    // Map the CartProduct list to a product list in the format required by the API
+    List<Map<String, dynamic>> productList = products.map((item) {
+      return {
+        'product': item.product.id,
+        'quantity': item.quantity,
+        'amount': item.product.productPrice
+      };
+    }).toList();
+
+    // Call the APIService's createOrder method
+    await APIService().createOrder(
+      userId,
+      grandTotal,
+      orderStatus,
+      productList,
+    );
   }
 }
