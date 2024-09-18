@@ -305,30 +305,28 @@ class APIService {
     }
   }
 
-  Future<Map<String, dynamic>> createOrder(
-    String userId,
-    double grandTotal,
-    String orderStatus,
-    List<dynamic> products,
-  ) async {
-    var url = Uri.https(Config.apiURL, Config.orderAPI);
-    var response = await client.post(
-      url,
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({
-        'userId': userId,
-        'grandTotal': grandTotal,
-        'orderStatus': orderStatus,
-        'products': products,
-      }),
-    );
+Future<Map<String, dynamic>> createOrder(
+  String userId, double grandTotal, String orderStatus, List<dynamic> products
+) async {
+  var url = Uri.https(Config.apiURL, Config.orderAPI);
+  var response = await client.post(
+    url,
+    headers: {'Content-Type': 'application/json'},
+    body: jsonEncode({
+      'userId': userId,
+      'grandTotal': grandTotal,
+      'orderStatus': orderStatus,
+      'products': products,  // List of products with product ID, amount, and quantity
+    }),
+  );
 
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body);
-    } else {
-      throw Exception('Failed to create order');
-    }
+  if (response.statusCode == 200) {
+    return jsonDecode(response.body);
+  } else {
+    throw Exception('Failed to create order');
   }
+}
+
 
   // Method to update an order
   Future<bool> updateOrder(String orderId, String transactionId) async {

@@ -18,6 +18,13 @@ class ProductDetailsPage extends ConsumerStatefulWidget {
 class _ProductDetailsPageState extends ConsumerState<ProductDetailsPage> {
   String productId = "";
   int quantity = 1;
+  TextEditingController quantityController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    quantityController.text = quantity.toString();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +39,6 @@ class _ProductDetailsPageState extends ConsumerState<ProductDetailsPage> {
   }
 
   @override
-
   void didChangeDependencies() {
     final arguments = ModalRoute.of(context)!.settings.arguments;
 
@@ -43,7 +49,6 @@ class _ProductDetailsPageState extends ConsumerState<ProductDetailsPage> {
 
     super.didChangeDependencies();
   }
-
 
   Widget _productDetails(WidgetRef ref) {
     final details = ref.watch(productDetailsProvider(productId));
@@ -98,10 +103,27 @@ class _ProductDetailsPageState extends ConsumerState<ProductDetailsPage> {
               ),
             ],
           ),
-          //const SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              Expanded(
+                child: TextFormField(
+                  controller: quantityController,
+                  keyboardType: TextInputType.number,
+                  decoration: const InputDecoration(
+                    labelText: "Quantity",
+                  ),
+                  onChanged: (value) {
+                    int? newQuantity = int.tryParse(value);
+                    if (newQuantity != null && newQuantity > 0) {
+                      setState(() {
+                        quantity = newQuantity;
+                      });
+                    }
+                  },
+                ),
+              ),
+              const SizedBox(width: 10),
               CustomStepper(
                 lowerLimit: 1,
                 upperLimit: 20,
@@ -111,6 +133,7 @@ class _ProductDetailsPageState extends ConsumerState<ProductDetailsPage> {
                 onChanged: (value) {
                   setState(() {
                     quantity = value["quantity"];
+                    quantityController.text = quantity.toString();
                   });
                 },
               )

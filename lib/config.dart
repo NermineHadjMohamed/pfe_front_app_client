@@ -1,9 +1,9 @@
 class Config {
   static const String appName = "Client App";
   static const String apiURL =
-      "questionnaire-electric-templates-tobago.trycloudflare.com"; // Add scheme
+      "cached-ordered-sky-nec.trycloudflare.com"; // Add scheme
   static const String imageURL =
-      "questionnaire-electric-templates-tobago.trycloudflare.com"; // Assuming the imageURL requires scheme
+      "cached-ordered-sky-nec.trycloudflare.com"; // Assuming the imageURL requires scheme
   static const String categoryAPI = "api/category";
   static const String productAPI = "api/product";
   static const String registerAPI = "api/register";
