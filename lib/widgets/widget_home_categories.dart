@@ -1,4 +1,4 @@
-import 'package:client_app/models/category.dart';
+/*import 'package:client_app/models/category.dart';
 import 'package:client_app/models/pagination.dart';
 import 'package:client_app/models/product_filter.dart';
 import 'package:client_app/providers.dart';
@@ -115,4 +115,4 @@ class HomeCategoriesWidget extends ConsumerWidget {
       ),
     );
   }
-}
+}*/

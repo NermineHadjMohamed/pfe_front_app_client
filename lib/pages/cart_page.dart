@@ -18,45 +18,37 @@ class CartPage extends ConsumerStatefulWidget {
 class _CartPageState extends ConsumerState<CartPage> {
   @override
   Widget build(BuildContext context) {
-    print("CART PGE");
     return Scaffold(
       appBar: AppBar(
         title: const Text('Cart'),
       ),
-      bottomNavigationBar: _checkoutBottomNavbar(),
-      body: Container(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Flexible(
-              child: _CartList(ref),
-              flex: 1,
-            )
-          ],
-        ),
+      bottomNavigationBar: _CheckoutBottomNavbar(),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: _CartList(ref),
+          ),
+        ],
       ),
     );
   }
 
-  Widget _builCartItems(List<CartProduct> cartProducts, WidgetRef ref) {
-    print("builder");
+  Widget _buildCartItems(List<CartProduct> cartProducts, WidgetRef ref) {
     return ListView.builder(
       shrinkWrap: true,
       physics: const ClampingScrollPhysics(),
-      scrollDirection: Axis.vertical,
       itemCount: cartProducts.length,
       itemBuilder: (context, index) {
         return CartItemWidget(
           model: cartProducts[index],
           onQuantityUpdate: (CartProduct model, quantity, type) {
             final cartViewModel = ref.read(cartItemsProvider.notifier);
-
             cartViewModel.updateQuantity(model.product.id, quantity, type);
           },
           onItemRemove: (CartProduct model) {
             final cartViewModel = ref.read(cartItemsProvider.notifier);
-
             cartViewModel.removeCartItem(model.product.id, model.quantity);
           },
         );
@@ -65,121 +57,103 @@ class _CartPageState extends ConsumerState<CartPage> {
   }
 
   Widget _CartList(WidgetRef ref) {
-    final CartState = ref.watch(cartItemsProvider);
+    final cartState = ref.watch(cartItemsProvider);
 
-    if (CartState.cartModel == null) {
-      return const LinearProgressIndicator();
+    if (cartState.cartModel == null) {
+      return const Center(child: CircularProgressIndicator());
     }
 
-    if (CartState.cartModel!.products.isEmpty) {
-      return const Center(
-        child: Text('Cart Empty'),
-      );
+    if (cartState.cartModel!.products.isEmpty) {
+      return const Center(child: Text('Cart Empty'));
     }
 
-    return _builCartItems(CartState.cartModel!.products, ref);
+    return _buildCartItems(cartState.cartModel!.products, ref);
   }
 }
 
-class _checkoutBottomNavbar extends ConsumerWidget {
+class _CheckoutBottomNavbar extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final cartProvider = ref.watch(cartItemsProvider);
 
-    if (cartProvider.cartModel != null) {
-      return cartProvider.cartModel!.products.isNotEmpty
-          ? Container(
-              height: 50,
-              decoration: BoxDecoration(
-                color: Colors.green,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Padding(
-                padding: EdgeInsets.all(8),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Total: ${Config.currency}${cartProvider.cartModel!.grandTotal.toString()}",
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    GestureDetector(
-                      child: Text(
-                        "Pass Order",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 15,
-                        ),
-                      ),
-                      onTap: () async {
-                        try {
-                          // Show loading spinner (optional)
-                          showDialog(
-                            context: context,
-                            barrierDismissible: false,
-                            builder: (context) {
-                              return const Center(
-                                child: CircularProgressIndicator(),
-                              );
-                            },
-                          );
-
-                          // Call the APIService to create the order
-                          await createOrderAPI(
-                            cartProvider.cartModel!.userId, // Pass userId
-                            cartProvider.cartModel!.grandTotal, // Grand total
-                            'created', // Initial order status
-                            cartProvider.cartModel!.products, // List of products
-                          );
-
-                          // Close the loading spinner
-                          Navigator.of(context).pop(); 
-
-                          // Navigate to the Order Success Page
-                          Navigator.of(context).pushNamed("/order-success");
-                        } catch (error) {
-                          // Close the loading spinner
-                          Navigator.of(context).pop(); 
-                          
-                          // Show an error message if the order creation fails
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text("Order creation failed: $error")),
-                          );
-                        }
-                      },
-                    ),
-                  ],
+    if (cartProvider.cartModel != null &&
+        cartProvider.cartModel!.products.isNotEmpty) {
+      return Container(
+        height: 50,
+        decoration: BoxDecoration(
+          color: Colors.green,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(8),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                "Total: ${Config.currency}${cartProvider.cartModel!.grandTotal.toString()}",
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
-            )
-          : const SizedBox();
+              GestureDetector(
+                child: const Text(
+                  "Pass Order",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15,
+                  ),
+                ),
+                onTap: () async {
+                  try {
+                    // Afficher le spinner de chargement
+                    showDialog(
+                      context: context,
+                      barrierDismissible: false,
+                      builder: (context) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      },
+                    );
+
+                    // Appel à l'API pour créer une commande
+                    await APIService().createOrder(
+                      cartProvider.cartModel!.userId,
+                      cartProvider.cartModel!.grandTotal,
+                      'created', // Status initial de la commande
+                      cartProvider.cartModel!.products.map((item) {
+                        return {
+                          'product': item.product.id,
+                          'quantity': item.quantity,
+                          'amount': item.product.productPrice,
+                        };
+                      }).toList(),
+                    );
+
+                    // Fermer le spinner de chargement
+                    Navigator.of(context).pop();
+
+                    // Naviguer vers la page de succès de commande
+                    Navigator.of(context).pushNamed("/order-success");
+                  } catch (error) {
+                    // Fermer le spinner de chargement
+                    Navigator.of(context).pop();
+
+                    // Afficher un message d'erreur en cas d'échec
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("Order creation failed: $error")),
+                    );
+                  }
+                },
+              ),
+            ],
+          ),
+        ),
+      );
     }
 
     return const SizedBox();
-  }
-
-  // Helper function to create the order using the APIService
-  Future<void> createOrderAPI(
-      String userId, double grandTotal, String orderStatus, List<CartProduct> products) async {
-    // Map the CartProduct list to a product list in the format required by the API
-    List<Map<String, dynamic>> productList = products.map((item) {
-      return {
-        'product': item.product.id,
-        'quantity': item.quantity,
-        'amount': item.product.productPrice
-      };
-    }).toList();
-
-    // Call the APIService's createOrder method
-    await APIService().createOrder(
-      userId,
-      grandTotal,
-      orderStatus,
-      productList,
-    );
   }
 }

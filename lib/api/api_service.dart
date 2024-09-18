@@ -169,6 +169,7 @@ class APIService {
       return null;
     }
   }
+
   Future<bool?> addCartItem(String productId, int quantity) async {
     try {
       var loginDetails = await SharedService
@@ -305,28 +306,42 @@ class APIService {
     }
   }
 
-Future<Map<String, dynamic>> createOrder(
-  String userId, double grandTotal, String orderStatus, List<dynamic> products
-) async {
-  var url = Uri.https(Config.apiURL, Config.orderAPI);
-  var response = await client.post(
-    url,
-    headers: {'Content-Type': 'application/json'},
-    body: jsonEncode({
-      'userId': userId,
-      'grandTotal': grandTotal,
-      'orderStatus': orderStatus,
-      'products': products,  // List of products with product ID, amount, and quantity
-    }),
-  );
+  Future<Map<String, dynamic>> createOrder(String userId, double grandTotal,
+      String orderStatus, List<dynamic> products) async {
+    var loginDetails = await SharedService.loginDetails();
 
-  if (response.statusCode == 200) {
-    return jsonDecode(response.body);
-  } else {
-    throw Exception('Failed to create order');
+    if (loginDetails != null) {
+      var url = Uri.https(Config.apiURL, Config.orderAPI);
+
+      var response = await client.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Basic ${loginDetails.data.token.toString()}'
+        },
+        body: jsonEncode({
+          'userId': userId,
+          'grandTotal': grandTotal,
+          'orderStatus': orderStatus,
+          'products': products
+              .map((product) => {
+                    'product': product['productId'],
+                    'quantity': product['quantity'],
+                    'amount': product['amount']
+                  })
+              .toList(),
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } else {
+        throw Exception('Failed to create order');
+      }
+    } else {
+      throw Exception('User not logged in');
+    }
   }
-}
-
 
   // Method to update an order
   Future<bool> updateOrder(String orderId, String transactionId) async {
