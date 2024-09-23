@@ -1,6 +1,8 @@
 import 'package:client_app/pages/dashboard_page.dart';
 import 'package:client_app/pages/home_page.dart';
 import 'package:client_app/pages/login_page.dart';
+import 'package:client_app/pages/orderDetails_page.dart';
+import 'package:client_app/pages/orderList_page.dart';
 import 'package:client_app/pages/order_success.dart';
 import 'package:client_app/pages/product_details_page.dart';
 import 'package:client_app/pages/products_page.dart';
@@ -14,6 +16,7 @@ GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 Widget _defaultHome = const LoginPage();
 
 void main() async {
+  
   WidgetsFlutterBinding.ensureInitialized();
   bool _result = await SharedService.isLoggedIn();
 
@@ -63,6 +66,8 @@ class MyApp extends StatelessWidget {
             '/product-details': (BuildContext context) =>
                 const ProductDetailsPage(),
             '/order-success': (context) => const OrderSuccess(),
+            '/order-details': (context) => const OrderDetailsPage(),
+            '/order-list': (context) => OrderListPage(),
           },
         );
       },

@@ -1,21 +1,55 @@
 import 'dart:convert';
-import 'dart:developer';
+
 
 import 'package:client_app/main.dart';
 import 'package:client_app/models/cart.dart';
 import 'package:client_app/models/category.dart';
 import 'package:client_app/models/login_response_model.dart';
+
+import 'package:client_app/models/order.dart' hide Product;
 import 'package:client_app/models/product.dart';
 import 'package:client_app/models/product_filter.dart';
 import 'package:client_app/utils/shared_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import '../../config.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
 
 final apiService = Provider((ref) => APIService());
 
 class APIService {
   static var client = http.Client();
+final FlutterSecureStorage _storage = FlutterSecureStorage();
+
+  Future<List<Order>?> getOrders() async {
+  var loginDetails = await SharedService.loginDetails();
+  Map<String, String> requestHeaders = {
+    'Content-Type': 'application/json',
+    'Authorization': 'Basic ${loginDetails!.data.token.toString()}'
+  };
+
+  var url = Uri.https(Config.apiURL, Config.orderAPI);
+  var response = await client.get(url, headers: requestHeaders);
+
+  if (response.statusCode == 200) {
+    var data = jsonDecode(response.body);
+    print('Orders fetched: ${data}');
+
+    try {
+      // Parsing orders correctly using the updated model
+      return (data["data"] as List)
+          .map((orderJson) => Order.fromJson(orderJson))
+          .toList();
+    } catch (e) {
+      print('Error parsing orders: $e');
+      return null;
+    }
+  } else {
+    print('Failed to fetch orders: ${response.body}');
+    return null;
+  }
+}
 
   Future<List<Category>?> getCategories(page, pageSize) async {
     Map<String, String> requestHeaders = {
@@ -90,26 +124,38 @@ class APIService {
   }
 
   static Future<bool> registerUser(
-    String fullName,
-    String email,
-    String password,
-  ) async {
-    Map<String, String> requestHeaders = {'Content-Type': 'application/json'};
-    var url = Uri.https(Config.apiURL, Config.registerAPI);
-    var response = await client.post(
-      url,
-      headers: requestHeaders,
-      body: jsonEncode(
-        {"fullName": fullName, "email": email, "password": password},
-      ),
-    );
-    log(response.body.toString());
-    if (response.statusCode == 200) {
-      return true;
-    } else {
-      return false;
-    }
+  String fullName,
+  String email,
+  String password,
+  String companyName,
+  String phoneNumber,
+  String postalAddress,
+) async {
+  Map<String, String> requestHeaders = {'Content-Type': 'application/json'};
+  var url = Uri.https(Config.apiURL, Config.registerAPI);
+  
+  var response = await client.post(
+    url,
+    headers: requestHeaders,
+    body: jsonEncode({
+      "fullName": fullName,
+      "email": email,
+      "password": password,
+      "companyName": companyName,
+      "phoneNumber": phoneNumber,
+      "postalAddress": postalAddress,
+    }),
+  );
+
+
+  
+  if (response.statusCode == 200) {
+    return true;
+  } else {
+    return false;
   }
+}
+
 
   static Future<bool> loginUser(
     String email,
@@ -357,4 +403,30 @@ class APIService {
 
     return response.statusCode == 200;
   }
+
+  Future<void> logout() async {
+    final String? token = await _storage.read(key: 'token'); // Retrieve the token
+
+    if (token != null) {
+      final response = await http.post(
+        Uri.https(Config.apiURL, '/logout'), // Update with your logout endpoint
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        // Successful logout, remove the token from storage
+        await _storage.delete(key: 'token');
+        print('Logged out successfully');
+        // Navigate to the login page or do any necessary cleanup
+      } else {
+        print('Logout failed: ${response.body}');
+      }
+    } else {
+      print('No token found, user might already be logged out.');
+    }
+  }
+  
 }

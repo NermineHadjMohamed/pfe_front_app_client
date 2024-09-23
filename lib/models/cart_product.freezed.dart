@@ -20,7 +20,7 @@ CartProduct _$CartProductFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$CartProduct {
-  double get quantity => throw _privateConstructorUsedError;
+  int get quantity => throw _privateConstructorUsedError;
   Product get product => throw _privateConstructorUsedError;
 
   /// Serializes this CartProduct to a JSON map.
@@ -39,7 +39,7 @@ abstract class $CartProductCopyWith<$Res> {
           CartProduct value, $Res Function(CartProduct) then) =
       _$CartProductCopyWithImpl<$Res, CartProduct>;
   @useResult
-  $Res call({double quantity, Product product});
+  $Res call({int quantity, Product product});
 
   $ProductCopyWith<$Res> get product;
 }
@@ -66,7 +66,7 @@ class _$CartProductCopyWithImpl<$Res, $Val extends CartProduct>
       quantity: null == quantity
           ? _value.quantity
           : quantity // ignore: cast_nullable_to_non_nullable
-              as double,
+              as int,
       product: null == product
           ? _value.product
           : product // ignore: cast_nullable_to_non_nullable
@@ -93,7 +93,7 @@ abstract class _$$CartProductImplCopyWith<$Res>
       __$$CartProductImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({double quantity, Product product});
+  $Res call({int quantity, Product product});
 
   @override
   $ProductCopyWith<$Res> get product;
@@ -119,7 +119,7 @@ class __$$CartProductImplCopyWithImpl<$Res>
       quantity: null == quantity
           ? _value.quantity
           : quantity // ignore: cast_nullable_to_non_nullable
-              as double,
+              as int,
       product: null == product
           ? _value.product
           : product // ignore: cast_nullable_to_non_nullable
@@ -137,7 +137,7 @@ class _$CartProductImpl implements _CartProduct {
       _$$CartProductImplFromJson(json);
 
   @override
-  final double quantity;
+  final int quantity;
   @override
   final Product product;
 
@@ -178,14 +178,14 @@ class _$CartProductImpl implements _CartProduct {
 
 abstract class _CartProduct implements CartProduct {
   factory _CartProduct(
-      {required final double quantity,
+      {required final int quantity,
       required final Product product}) = _$CartProductImpl;
 
   factory _CartProduct.fromJson(Map<String, dynamic> json) =
       _$CartProductImpl.fromJson;
 
   @override
-  double get quantity;
+  int get quantity;
   @override
   Product get product;
 

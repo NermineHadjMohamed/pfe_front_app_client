@@ -2,9 +2,9 @@ import 'package:client_app/api/api_service.dart';
 import 'package:client_app/config.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
-import 'package:snippet_coder_utils/ProgressHUD.dart';
+import 'package:country_picker/country_picker.dart';
 import 'package:snippet_coder_utils/FormHelper.dart';
+import 'package:snippet_coder_utils/ProgressHUD.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
@@ -15,14 +15,30 @@ class RegisterPage extends StatefulWidget {
 
 class _RegisterPageState extends State<RegisterPage> {
   static final GlobalKey<FormState> globalKey = GlobalKey<FormState>();
-  
+
   bool isAsyncCallProcess = false;
+  bool hidePassword = true;
+  bool hideConfirmPassword = true;
   String? fullName;
+  String? companyName;
+  String? postalAddress;
   String? password;
   String? confirmPassword;
   String? email;
-  bool hidePassword = true;
-  bool hideConfirmPassword = true;
+  String? phoneNumber;
+  Country? selectedCountry;
+
+  void showCountryPickerDialog() {
+    showCountryPicker(
+      context: context,
+      showPhoneCode: true,
+      onSelect: (Country country) {
+        setState(() {
+          selectedCountry = country;
+        });
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,9 +67,7 @@ class _RegisterPageState extends State<RegisterPage> {
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const SizedBox(
-                height: 10,
-              ),
+              const SizedBox(height: 10),
               Align(
                 alignment: Alignment.center,
                 child: Image.asset(
@@ -62,9 +76,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   width: 150,
                 ),
               ),
-              const SizedBox(
-                height: 10,
-              ),
+              const SizedBox(height: 10),
               Text(
                 "Client App",
                 style: TextStyle(
@@ -72,9 +84,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   fontSize: 35,
                 ),
               ),
-              const SizedBox(
-                height: 10,
-              ),
+              const SizedBox(height: 10),
             ],
           ),
           const Center(
@@ -87,11 +97,10 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
             ),
           ),
-          ///////////fullname
-          const SizedBox(
-            height: 10,
-          ),
-          FormHelper.inputFieldWidget(context, "fullName", "full Name",
+          const SizedBox(height: 10),
+
+          // Full Name
+          FormHelper.inputFieldWidget(context, "fullName", "Full Name",
               (onValidateVal) {
             if (onValidateVal.isEmpty) {
               return "* Required";
@@ -112,24 +121,106 @@ class _RegisterPageState extends State<RegisterPage> {
               hintColor: Colors.black.withOpacity(.6),
               backgroundColor: Colors.grey.shade100,
               borderFocusColor: Colors.grey.shade200),
-          /////////////email
-          const SizedBox(
-            height: 10,
+
+          // Company Name
+          const SizedBox(height: 10),
+          FormHelper.inputFieldWidget(context, "companyName", "Company Name",
+              (onValidateVal) {
+            if (onValidateVal.isEmpty) {
+              return "* Required";
+            }
+            return null;
+          }, (onSavedVal) {
+            companyName = onSavedVal.toString().trim();
+          },
+              showPrefixIcon: true,
+              prefixIcon: const Icon(Icons.business),
+              borderRadius: 10,
+              contentPadding: 15,
+              fontSize: 14,
+              prefixIconPaddingLeft: 10,
+              borderColor: Colors.grey.shade400,
+              textColor: Colors.black,
+              prefixIconColor: Colors.black,
+              hintColor: Colors.black.withOpacity(.6),
+              backgroundColor: Colors.grey.shade100,
+              borderFocusColor: Colors.grey.shade200),
+
+          // Country Picker
+          const SizedBox(height: 10),
+          GestureDetector(
+            onTap: showCountryPickerDialog,
+            child: Container(
+              padding: const EdgeInsets.all(16.0),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Row(
+                children: [
+                  Text(
+                    selectedCountry != null
+                        ? "${selectedCountry!.name} (+${selectedCountry!.phoneCode})"
+                        : "Select Country",
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                  const Spacer(),
+                  const Icon(Icons.arrow_drop_down),
+                ],
+              ),
+            ),
           ),
+
+          // Phone Number
+          const SizedBox(height: 10),
+          TextField(
+            decoration: InputDecoration(
+              labelText: "Phone Number",
+              border: OutlineInputBorder(),
+            ),
+            keyboardType: TextInputType.phone,
+            onChanged: (value) {
+              phoneNumber = value;
+            },
+          ),
+          const SizedBox(height: 10),
+
+          // Postal Address
+          FormHelper.inputFieldWidget(
+              context, "postalAddress", "Postal Address", (onValidateVal) {
+            if (onValidateVal.isEmpty) {
+              return "* Required";
+            }
+            return null;
+          }, (onSavedVal) {
+            postalAddress = onSavedVal.toString().trim();
+          },
+              showPrefixIcon: true,
+              prefixIcon: const Icon(Icons.location_on),
+              borderRadius: 10,
+              contentPadding: 15,
+              fontSize: 14,
+              prefixIconPaddingLeft: 10,
+              borderColor: Colors.grey.shade400,
+              textColor: Colors.black,
+              prefixIconColor: Colors.black,
+              hintColor: Colors.black.withOpacity(.6),
+              backgroundColor: Colors.grey.shade100,
+              borderFocusColor: Colors.grey.shade200),
+
+          // Email
+          const SizedBox(height: 10),
           FormHelper.inputFieldWidget(context, "email", "E-mail",
               (onValidateVal) {
             if (onValidateVal.isEmpty) {
               return "* Required";
             }
-
             bool emailValid = RegExp(
                     r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
                 .hasMatch(onValidateVal);
-
             if (!emailValid) {
               return "Invalid E-mail";
             }
-
             return null;
           }, (onSavedVal) {
             email = onSavedVal.toString().trim();
@@ -146,10 +237,8 @@ class _RegisterPageState extends State<RegisterPage> {
               hintColor: Colors.black.withOpacity(.6),
               backgroundColor: Colors.grey.shade100,
               borderFocusColor: Colors.grey.shade200),
-          ///////////password
-          const SizedBox(
-            height: 10,
-          ),
+
+          // Password
           FormHelper.inputFieldWidget(
             context,
             "password",
@@ -158,7 +247,6 @@ class _RegisterPageState extends State<RegisterPage> {
               if (onValidateVal.isEmpty) {
                 return "* Required";
               }
-
               return null;
             },
             (onSavedVal) {
@@ -192,13 +280,12 @@ class _RegisterPageState extends State<RegisterPage> {
               password = val;
             },
           ),
-          ///////////conformpassword
-          const SizedBox(
-            height: 10,
-          ),
+
+          // Confirm Password
+          const SizedBox(height: 10),
           FormHelper.inputFieldWidget(
             context,
-            "ConfirmPassword",
+            "confirmPassword",
             "Confirm Password",
             (onValidateVal) {
               if (onValidateVal.isEmpty) {
@@ -207,7 +294,6 @@ class _RegisterPageState extends State<RegisterPage> {
               if (onValidateVal != password) {
                 return "Confirm Password not matched";
               }
-
               return null;
             },
             (onSavedVal) {
@@ -237,32 +323,36 @@ class _RegisterPageState extends State<RegisterPage> {
                 hideConfirmPassword ? Icons.visibility_off : Icons.visibility,
               ),
             ),
+            onChange: (val) {
+              confirmPassword = val;
+            },
           ),
-          const SizedBox(
-            height: 10,
-          ),
+
+          // Register Button
+          const SizedBox(height: 20),
           Center(
             child: FormHelper.submitButton(
-              "Sign Up",
+              "Register",
               () {
-                print(email);
                 if (validateSave()) {
-                  //API Request
                   setState(() {
                     isAsyncCallProcess = true;
                   });
+
                   APIService.registerUser(
                     fullName!,
                     email!,
                     password!,
-                  ).then(
-                    (response) {
-                      setState(() {
-                        isAsyncCallProcess = false;
-                      });
+                    companyName!,
+                    phoneNumber!,
+                    postalAddress!,
+                  ).then((response) {
+                    setState(() {
+                      isAsyncCallProcess = false;
+                    });
 
-                      if (response) {
-                        FormHelper.showSimpleAlertDialog(
+                    if (response) {
+                     FormHelper.showSimpleAlertDialog(
                           context,
                           Config.appName,
                           "Registration  completed successfully",

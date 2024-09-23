@@ -7,7 +7,7 @@ part 'cart_product.g.dart';
 @freezed
 abstract class CartProduct with _$CartProduct {
   factory CartProduct({
-    required double quantity,
+    required int quantity,
     required Product product,
   }) = _CartProduct;
 

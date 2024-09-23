@@ -9,7 +9,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class CartPage extends ConsumerStatefulWidget {
+  
   const CartPage({super.key});
+  
 
   @override
   _CartPageState createState() => _CartPageState();
@@ -20,7 +22,7 @@ class _CartPageState extends ConsumerState<CartPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Cart'),
+        title: const Text('Order'),
       ),
       bottomNavigationBar: _CheckoutBottomNavbar(),
       body: Column(
@@ -45,7 +47,7 @@ class _CartPageState extends ConsumerState<CartPage> {
           model: cartProducts[index],
           onQuantityUpdate: (CartProduct model, quantity, type) {
             final cartViewModel = ref.read(cartItemsProvider.notifier);
-            cartViewModel.updateQuantity(model.product.id, quantity, type);
+            cartViewModel.updateQuantity(model.product.id, quantity.toInt(), type);
           },
           onItemRemove: (CartProduct model) {
             final cartViewModel = ref.read(cartItemsProvider.notifier);
@@ -64,7 +66,7 @@ class _CartPageState extends ConsumerState<CartPage> {
     }
 
     if (cartState.cartModel!.products.isEmpty) {
-      return const Center(child: Text('Cart Empty'));
+      return const Center(child: Text('Order Empty'));
     }
 
     return _buildCartItems(cartState.cartModel!.products, ref);
@@ -126,7 +128,7 @@ class _CheckoutBottomNavbar extends ConsumerWidget {
                       cartProvider.cartModel!.products.map((item) {
                         return {
                           'product': item.product.id,
-                          'quantity': item.quantity,
+                          'quantity': item.quantity.toInt(),
                           'amount': item.product.productPrice,
                         };
                       }).toList(),

@@ -37,6 +37,9 @@ dependencies:
   cupertino_icons: 
   snippet_coder_utils:
   api_cache_manager:
+  intl: ^0.17.0
+  flutter_secure_storage: ^9.2.2
+  country_picker: ^2.0.0
   
 
 dev_dependencies:

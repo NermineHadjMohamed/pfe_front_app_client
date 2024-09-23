@@ -6,7 +6,6 @@ import 'package:client_app/models/product_sort.dart';
 import 'package:client_app/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
 
 class ProductsPage extends StatefulWidget {
   const ProductsPage({Key? key}) : super(key: key);
@@ -23,22 +22,24 @@ class _ProductsPageState extends State<ProductsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Products"),
+        title: Text(
+          "Products",
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        backgroundColor: Colors.teal, // Change to a vibrant color
       ),
       body: Container(
-        color: Colors.grey[300],
+        color: Colors.white, // Change background color
+        padding: const EdgeInsets.all(10),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _ProductFilters(
               categoryId: categoryId,
               categoryName: categoryName,
             ),
-            Flexible(
+            Expanded(
               child: _ProductList(),
-              flex: 1,
-            )
+            ),
           ],
         ),
       ),
@@ -60,8 +61,8 @@ class _ProductsPageState extends State<ProductsPage> {
 class _ProductFilters extends ConsumerWidget {
   final _sortByOptions = [
     ProductSortModel(value: "createdAt", label: "Latest"),
-    ProductSortModel(value: "productPrice", label: "Price: High to  Low"),
-    ProductSortModel(value: "productPrice", label: "Price: Low to  High"),
+    ProductSortModel(value: "productPrice", label: "Price: High to Low"),
+    ProductSortModel(value: "productPrice", label: "Price: Low to High"),
   ];
 
   _ProductFilters({
@@ -78,46 +79,50 @@ class _ProductFilters extends ConsumerWidget {
     final filterProvider = ref.watch(productsFilterProvider);
 
     return Container(
-      height: 51,
-      margin: const EdgeInsets.fromLTRB(10, 10, 10, 5),
+      height: 60,
+      margin: const EdgeInsets.symmetric(vertical: 10),
+      decoration: BoxDecoration(
+        color: Colors.teal[100], // Soft background for filter section
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black26,
+            blurRadius: 6.0,
+            offset: Offset(0, 3),
+          ),
+        ],
+      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
-              categoryName!,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+              categoryName ?? "All Products",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
             ),
           ),
-          Container(
-            decoration: BoxDecoration(color: Colors.grey[300]),
-            child: PopupMenuButton(
-              onSelected: (sortBy) {
-                ProductFilterModel filterModel = ProductFilterModel(
-                    paginationModel: PaginationModel(page: 0, pageSize: 10),
-                    categoryId: filterProvider.categoryId,
-                    sortBy: sortBy.toString());
+          PopupMenuButton(
+            onSelected: (sortBy) {
+              ProductFilterModel filterModel = ProductFilterModel(
+                  paginationModel: PaginationModel(page: 0, pageSize: 10),
+                  categoryId: filterProvider.categoryId,
+                  sortBy: sortBy.toString());
 
-                ref
-                    .read(productsFilterProvider.notifier)
-                    .setProductFilter(filterModel);
-                ref.read(productsNotifierProvider.notifier).getProducts();
-              },
-              initialValue: filterProvider.sortBy,
-              itemBuilder: (BuildContext context) {
-                return _sortByOptions.map((item) {
-                  return PopupMenuItem(
-                    value: item.value,
-                    child: InkWell(
-                      child: Text(item.label!),
-                    ),
-                  );
-                }).toList();
-              },
-              icon: const Icon(Icons.filter_list_alt),
-            ),
-          )
+              ref.read(productsFilterProvider.notifier).setProductFilter(filterModel);
+              ref.read(productsNotifierProvider.notifier).getProducts();
+            },
+            initialValue: filterProvider.sortBy,
+            itemBuilder: (BuildContext context) {
+              return _sortByOptions.map((item) {
+                return PopupMenuItem(
+                  value: item.value,
+                  child: Text(item.label!),
+                );
+              }).toList();
+            },
+            icon: Icon(Icons.filter_list, color: Colors.teal),
+          ),
         ],
       ),
     );
@@ -126,59 +131,49 @@ class _ProductFilters extends ConsumerWidget {
 
 class _ProductList extends ConsumerWidget {
   final ScrollController _scrollController = ScrollController();
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final ProductsState = ref.watch(productsNotifierProvider);
+    final productsState = ref.watch(productsNotifierProvider);
 
     _scrollController.addListener(() {
-      if (_scrollController.position.pixels ==
-          _scrollController.position.maxScrollExtent) {
+      if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
         final productsViewModel = ref.read(productsNotifierProvider.notifier);
-        final ProductsState = ref.watch(productsNotifierProvider);
-
-        if (ProductsState.hasNext) {
+        if (productsState.hasNext) {
           productsViewModel.getProducts();
         }
       }
     });
 
-    if (ProductsState.products.isEmpty) {
-      if (!ProductsState.hasNext && !ProductsState.isLoading) {
+    if (productsState.products.isEmpty) {
+      if (!productsState.hasNext && !productsState.isLoading) {
         return const Center(
-          child: Text("No Products"),
+          child: Text("No Products Available"),
         );
       }
-      return const LinearProgressIndicator();
+      return const Center(child: CircularProgressIndicator());
     }
 
     return RefreshIndicator(
-        onRefresh: () async {
-          ref.read(productsNotifierProvider.notifier).refreshProducts();
+      onRefresh: () async {
+        ref.read(productsNotifierProvider.notifier).refreshProducts();
+      },
+      child: GridView.builder(
+        padding: const EdgeInsets.all(8.0),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: 10,
+          mainAxisSpacing: 10,
+          childAspectRatio: 0.7,
+        ),
+        controller: _scrollController,
+        itemCount: productsState.products.length,
+        itemBuilder: (context, index) {
+          return ProductCard(
+            model: productsState.products[index],
+          );
         },
-        child: Column(
-          children: [
-            Flexible(
-              flex: 1,
-              child: GridView.count(
-                crossAxisCount: 2,
-                controller: _scrollController,
-                children: List.generate(ProductsState.products.length, (index) {
-                  return ProductCard(
-                    model: ProductsState.products[index],
-                  );
-                }),
-              ),
-            ),
-            Visibility(
-              visible:
-                  ProductsState.isLoading && ProductsState.products.isNotEmpty,
-              child: const SizedBox(
-                height: 35,
-                width: 35,
-                child: CircularProgressIndicator(),
-              ),
-            )
-          ],
-        ));
+      ),
+    );
   }
 }

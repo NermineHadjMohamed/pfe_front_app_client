@@ -143,6 +143,23 @@ class _ProductDetailsPageState extends ConsumerState<ProductDetailsPage> {
             onPressed: () {
               final cartViewModel = ref.read(cartItemsProvider.notifier);
               cartViewModel.addCartItem(model.id, quantity);
+              // Show a SnackBar alerting the user that the product was added to the cart
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: const Text(
+                    "Product added to cart",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  backgroundColor: Colors.green,
+                  duration: const Duration(seconds: 2),
+                ),
+              );
+
+              // Delay the navigation until after the SnackBar is shown
+              Future.delayed(const Duration(seconds: 2), () {
+                // Navigate back to the /products page
+                Navigator.pushReplacementNamed(context, "/");
+              });
             },
             style: ButtonStyle(
               backgroundColor: MaterialStateProperty.all(Colors.green),
@@ -152,7 +169,7 @@ class _ProductDetailsPageState extends ConsumerState<ProductDetailsPage> {
               color: Colors.white,
             ),
             label: const Text(
-              "Add to Cart",
+              "Add to Order",
               style: TextStyle(color: Colors.white),
             ),
           ),

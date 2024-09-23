@@ -41,4 +41,6 @@ class SharedService {
       (route) => false,
     );
   }
+
+  static getLoginResponse() {}
 }
