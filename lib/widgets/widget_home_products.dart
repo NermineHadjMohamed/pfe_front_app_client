@@ -13,32 +13,37 @@ class HomeProductsWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    List<Product> list = List<Product>.empty(growable: true);
-
     return Container(
       color: const Color(0xffF4F7FA),
       child: Column(
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Padding(
                 padding: const EdgeInsets.only(left: 16, top: 15),
-                child: Text(
-                  "Products",
-                  style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
+                child: Row(
+                  children: [
+                    Icon(Icons.shopping_basket, size: 26, color: Colors.teal),
+                    SizedBox(width: 8),
+                    Text(
+                      "Products",
+                      style: TextStyle(
+                        fontSize: 24, // Increased font size
+                        fontWeight: FontWeight.bold,
+                        color: Colors.teal, // Changed text color
+                        letterSpacing: 1.2, // Added letter spacing
+                      ),
+                    ),
+                  ],
                 ),
-              )
+              ),
             ],
           ),
           Padding(
             padding: const EdgeInsets.all(5),
             child: _productsList(ref),
-          )
+          ),
         ],
       ),
     );
@@ -55,19 +60,13 @@ class HomeProductsWidget extends ConsumerWidget {
 
     return products.when(
       data: (list) {
-        // Vérifier si la liste est null ou vide
         if (list == null || list.isEmpty) {
-          return Center(
-              child: Text(
-                  "No products available")); // Gestion des cas où la liste est vide
+          return Center(child: Text("No products available"));
         }
-
-        return _buildProductList(list); // Pas besoin du !
+        return _buildProductList(list);
       },
       error: (_, __) {
-        return Center(
-            child:
-                Text("ERROR")); // Assurez-vous de retourner un Widget ici aussi
+        return Center(child: Text("ERROR"));
       },
       loading: () => Center(child: CircularProgressIndicator()),
     );
@@ -84,7 +83,9 @@ class HomeProductsWidget extends ConsumerWidget {
         itemBuilder: (context, index) {
           var data = products[index];
           return GestureDetector(
-            onTap: () {},
+            onTap: () {
+              // Handle product tap
+            },
             child: ProductCard(
               model: data,
             ),

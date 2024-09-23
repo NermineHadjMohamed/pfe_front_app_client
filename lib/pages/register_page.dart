@@ -148,41 +148,64 @@ class _RegisterPageState extends State<RegisterPage> {
 
           // Country Picker
           const SizedBox(height: 10),
-          GestureDetector(
-            onTap: showCountryPickerDialog,
-            child: Container(
-              padding: const EdgeInsets.all(16.0),
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Row(
-                children: [
-                  Text(
-                    selectedCountry != null
-                        ? "${selectedCountry!.name} (+${selectedCountry!.phoneCode})"
-                        : "Select Country",
-                    style: const TextStyle(fontSize: 16),
-                  ),
-                  const Spacer(),
-                  const Icon(Icons.arrow_drop_down),
-                ],
+          Container(
+            height: 56, // Match the height of input fields
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey.shade400),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: GestureDetector(
+              onTap: showCountryPickerDialog,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        selectedCountry != null
+                            ? "${selectedCountry!.name} (+${selectedCountry!.phoneCode})"
+                            : "Select Country",
+                        style: const TextStyle(fontSize: 16),
+                      ),
+                    ),
+                    const Icon(Icons.arrow_drop_down),
+                  ],
+                ),
               ),
             ),
           ),
 
-          // Phone Number
+// Phone Number
           const SizedBox(height: 10),
-          TextField(
-            decoration: InputDecoration(
-              labelText: "Phone Number",
-              border: OutlineInputBorder(),
-            ),
-            keyboardType: TextInputType.phone,
-            onChanged: (value) {
-              phoneNumber = value;
+          FormHelper.inputFieldWidget(
+            context,
+            "phoneNumber",
+            "Phone Number",
+            (onValidateVal) {
+              if (onValidateVal.isEmpty) {
+                return "* Required";
+              }
+              return null;
             },
+            (onSavedVal) {
+              phoneNumber = onSavedVal.toString().trim();
+            },
+            showPrefixIcon: true,
+            prefixIcon: const Icon(Icons.phone),
+            borderRadius: 10,
+            contentPadding: 15,
+            fontSize: 14,
+            prefixIconPaddingLeft: 10,
+            borderColor: Colors.grey.shade400,
+            textColor: Colors.black,
+            prefixIconColor: Colors.black,
+            hintColor: Colors.black.withOpacity(.6),
+            backgroundColor: Colors.grey.shade100,
+            borderFocusColor: Colors.grey.shade200,
+            
           ),
+
           const SizedBox(height: 10),
 
           // Postal Address
@@ -271,9 +294,10 @@ class _RegisterPageState extends State<RegisterPage> {
                   hidePassword = !hidePassword;
                 });
               },
-              color: Colors.redAccent.withOpacity(.4),
+              color: Colors.black,
               icon: Icon(
                 hidePassword ? Icons.visibility_off : Icons.visibility,
+
               ),
             ),
             onChange: (val) {
@@ -318,7 +342,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   hideConfirmPassword = !hideConfirmPassword;
                 });
               },
-              color: Colors.redAccent.withOpacity(.4),
+               color: Colors.black,
               icon: Icon(
                 hideConfirmPassword ? Icons.visibility_off : Icons.visibility,
               ),
@@ -346,13 +370,14 @@ class _RegisterPageState extends State<RegisterPage> {
                     companyName!,
                     phoneNumber!,
                     postalAddress!,
-                  ).then((response) {
-                    setState(() {
-                      isAsyncCallProcess = false;
-                    });
+                  ).then(
+                    (response) {
+                      setState(() {
+                        isAsyncCallProcess = false;
+                      });
 
-                    if (response) {
-                     FormHelper.showSimpleAlertDialog(
+                      if (response) {
+                        FormHelper.showSimpleAlertDialog(
                           context,
                           Config.appName,
                           "Registration  completed successfully",
@@ -423,7 +448,6 @@ class _RegisterPageState extends State<RegisterPage> {
 
   bool validateSave() {
     final form = globalKey.currentState;
-    
 
     if (form!.validate()) {
       form.save();

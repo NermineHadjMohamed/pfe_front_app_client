@@ -7,6 +7,7 @@ import 'package:client_app/pages/order_success.dart';
 import 'package:client_app/pages/product_details_page.dart';
 import 'package:client_app/pages/products_page.dart';
 import 'package:client_app/pages/register_page.dart';
+import 'package:client_app/pages/user_profile_page.dart';
 import 'package:client_app/utils/shared_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -68,6 +69,8 @@ class MyApp extends StatelessWidget {
             '/order-success': (context) => const OrderSuccess(),
             '/order-details': (context) => const OrderDetailsPage(),
             '/order-list': (context) => OrderListPage(),
+            '/user-profile': (BuildContext context) => UserProfilePage(),
+
           },
         );
       },

@@ -147,7 +147,7 @@ class _ProductDetailsPageState extends ConsumerState<ProductDetailsPage> {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: const Text(
-                    "Product added to cart",
+                    "Product added to order",
                     style: TextStyle(color: Colors.white),
                   ),
                   backgroundColor: Colors.green,

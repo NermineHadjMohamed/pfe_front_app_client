@@ -16,7 +16,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   bool isAsyncCallProcess = false;
   GlobalKey<FormState> globalKey = GlobalKey<FormState>();
-  
+
   String? email;
   String? password;
   bool hidePassword = true;
@@ -120,6 +120,7 @@ class _LoginPageState extends State<LoginPage> {
           const SizedBox(
             height: 10,
           ),
+          // Update the password input field
           FormHelper.inputFieldWidget(
             context,
             "Password",
@@ -128,7 +129,6 @@ class _LoginPageState extends State<LoginPage> {
               if (onValidate.isEmpty) {
                 return "* Required";
               }
-
               return null;
             },
             (onSaved) {
@@ -146,7 +146,20 @@ class _LoginPageState extends State<LoginPage> {
             hintColor: Colors.black.withOpacity(.6),
             backgroundColor: Colors.grey.shade100,
             borderFocusColor: Colors.grey.shade200,
+            obscureText: hidePassword, // Add this line
+            suffixIcon: IconButton(
+              icon: Icon(
+                hidePassword ? Icons.visibility_off : Icons.visibility,
+                color: Colors.black,
+              ),
+              onPressed: () {
+                setState(() {
+                  hidePassword = !hidePassword; // Toggle password visibility
+                });
+              },
+            ),
           ),
+
           const SizedBox(
             height: 10,
           ),

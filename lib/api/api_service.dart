@@ -175,6 +175,41 @@ final FlutterSecureStorage _storage = FlutterSecureStorage();
     }
   }
 
+  Future<Map<String, dynamic>?> getUserProfile() async {
+    try {
+      var loginDetails = await SharedService.loginDetails();
+      
+      if (loginDetails != null) {
+        // Setup request headers including the authorization token
+        Map<String, String> requestHeaders = {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ${loginDetails.data.token.toString()}',
+        };
+
+        // Define the endpoint for fetching the user profile
+        var url = Uri.https(Config.apiURL, Config.profileAPI);
+
+        // Send the GET request
+        var response = await client.get(url, headers: requestHeaders);
+
+        // Check if the response is successful
+        if (response.statusCode == 200) {
+          var data = jsonDecode(response.body);
+          return data["data"]; // Assuming the profile is in the "data" field
+        } else {
+          print('Failed to fetch profile: ${response.body}');
+          return null;
+        }
+      } else {
+        print('No login details found.');
+        return null;
+      }
+    } catch (e) {
+      print('Error fetching profile: $e');
+      return null;
+    }
+  }
+
   Future<Product?> getProductDetails(String productId) async {
     Map<String, String> requestHeaders = {'Content-Type': 'application/json'};
 

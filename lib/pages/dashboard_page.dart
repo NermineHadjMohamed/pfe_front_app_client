@@ -1,9 +1,9 @@
 import 'package:client_app/pages/cart_page.dart';
 import 'package:client_app/pages/home_page.dart';
 import 'package:client_app/pages/orderList_page.dart';
-import 'package:client_app/pages/login_page.dart'; // Import your login page
+import 'package:client_app/pages/login_page.dart';
+import 'package:client_app/pages/user_profile_page.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -17,15 +17,12 @@ class _DashboardPageState extends State<DashboardPage> {
     HomePage(),
     CartPage(),
     OrderListPage(),
-    HomePage(),
+    UserProfilePage(),
   ];
   int index = 0;
 
   void _logout() async {
     // Implement your logout logic here (e.g., clear tokens, etc.)
-    // Example: await AuthService.logout();
-
-    // Navigate to the login page
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(builder: (context) => LoginPage()),
@@ -37,7 +34,20 @@ class _DashboardPageState extends State<DashboardPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Client Application'),
+        title: Row(
+          children: [
+            Icon(Icons.business_center, size: 26), // Icon for the title
+            SizedBox(width: 8), // Space between icon and text
+            Text(
+              'Client Application',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+                letterSpacing: 1.2,
+              ),
+            ),
+          ],
+        ),
         actions: [
           IconButton(
             icon: Icon(Icons.logout),
