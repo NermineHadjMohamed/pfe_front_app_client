@@ -9,9 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class CartPage extends ConsumerStatefulWidget {
-  
   const CartPage({super.key});
-  
 
   @override
   _CartPageState createState() => _CartPageState();
@@ -47,7 +45,8 @@ class _CartPageState extends ConsumerState<CartPage> {
           model: cartProducts[index],
           onQuantityUpdate: (CartProduct model, quantity, type) {
             final cartViewModel = ref.read(cartItemsProvider.notifier);
-            cartViewModel.updateQuantity(model.product.id, quantity.toInt(), type);
+            cartViewModel.updateQuantity(
+                model.product.id, quantity.toInt(), type);
           },
           onItemRemove: (CartProduct model) {
             final cartViewModel = ref.read(cartItemsProvider.notifier);
@@ -108,45 +107,77 @@ class _CheckoutBottomNavbar extends ConsumerWidget {
                   ),
                 ),
                 onTap: () async {
-                  try {
-                    // Afficher le spinner de chargement
-                    showDialog(
-                      context: context,
-                      barrierDismissible: false,
-                      builder: (context) {
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      },
-                    );
+                  // Show confirmation dialog before creating the order
+                  final bool confirm = await showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: const Text('Confirm Order'),
+                        content: const Text(
+                            'Are you sure you want to pass this order?'),
+                        actions: <Widget>[
+                          TextButton(
+                            child: const Text('Cancel'),
+                            onPressed: () {
+                              Navigator.of(context)
+                                  .pop(false); // Return false if canceled
+                            },
+                          ),
+                          TextButton(
+                            child: const Text('Confirm'),
+                            onPressed: () {
+                              Navigator.of(context)
+                                  .pop(true); // Return true if confirmed
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  );
 
-                    // Appel à l'API pour créer une commande
-                    await APIService().createOrder(
-                      cartProvider.cartModel!.userId,
-                      cartProvider.cartModel!.grandTotal,
-                      'created', // Status initial de la commande
-                      cartProvider.cartModel!.products.map((item) {
-                        return {
-                          'product': item.product.id,
-                          'quantity': item.quantity.toInt(),
-                          'amount': item.product.productPrice,
-                        };
-                      }).toList(),
-                    );
+                  // If the user confirms, proceed to create the order
+                  if (confirm) {
+                    try {
+                      // Show loading spinner
+                      showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (context) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        },
+                      );
 
-                    // Fermer le spinner de chargement
-                    Navigator.of(context).pop();
+                      // API call to create order
+                      await APIService().createOrder(
+                        cartProvider.cartModel!.userId,
+                        cartProvider.cartModel!.grandTotal,
+                        'created', // Initial status of the order
+                        cartProvider.cartModel!.products.map((item) {
+                          return {
+                            'product': item.product.id,
+                            'quantity': item.quantity.toInt(),
+                            'amount': item.product.productPrice,
+                          };
+                        }).toList(),
+                      );
 
-                    // Naviguer vers la page de succès de commande
-                    Navigator.of(context).pushNamed("/order-success");
-                  } catch (error) {
-                    // Fermer le spinner de chargement
-                    Navigator.of(context).pop();
+                      // Hide loading spinner
+                      Navigator.of(context).pop();
 
-                    // Afficher un message d'erreur en cas d'échec
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text("Order creation failed: $error")),
-                    );
+                      // Navigate to success page
+                      Navigator.of(context).pushNamed("/order-success");
+                    } catch (error) {
+                      // Hide loading spinner
+                      Navigator.of(context).pop();
+
+                      // Show error message in case of failure
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                            content: Text("Order creation failed: $error")),
+                      );
+                    }
                   }
                 },
               ),

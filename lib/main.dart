@@ -17,7 +17,6 @@ GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 Widget _defaultHome = const LoginPage();
 
 void main() async {
-  
   WidgetsFlutterBinding.ensureInitialized();
   bool _result = await SharedService.isLoggedIn();
 
@@ -70,7 +69,6 @@ class MyApp extends StatelessWidget {
             '/order-details': (context) => const OrderDetailsPage(),
             '/order-list': (context) => OrderListPage(),
             '/user-profile': (BuildContext context) => UserProfilePage(),
-
           },
         );
       },

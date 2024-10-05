@@ -1,9 +1,9 @@
 class Config {
   static const String appName = "Client App";
   static const String apiURL =
-      "methods-protecting-protecting-navy.trycloudflare.com"; // Add scheme
+      "discounted-impossible-transport-gregory.trycloudflare.com"; // Add scheme
   static const String imageURL =
-      "methods-protecting-protecting-navy.trycloudflare.com"; // Assuming the imageURL requires scheme
+      "discounted-impossible-transport-gregory.trycloudflare.com"; // Assuming the imageURL requires scheme
   static const String categoryAPI = "api/category";
   static const String productAPI = "api/product";
   static const String registerAPI = "api/register";
@@ -13,4 +13,6 @@ class Config {
   static const String profileAPI = "api/profile";
   static const int pageSize = 10;
   static const String currency = "";
+ 
+
 }

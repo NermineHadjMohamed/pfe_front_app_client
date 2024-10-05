@@ -19,7 +19,7 @@ class OrderSuccess extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                "Your Order has been placed! You will recieve an email shortly",
+                "Your Order has been placed! ",
                 style: TextStyle(fontSize: 20),
                 textAlign: TextAlign.center,
               ),

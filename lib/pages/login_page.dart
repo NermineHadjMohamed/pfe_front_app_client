@@ -20,7 +20,7 @@ class _LoginPageState extends State<LoginPage> {
   String? email;
   String? password;
   bool hidePassword = true;
-  bool isRemeber = false;
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -45,9 +45,7 @@ class _LoginPageState extends State<LoginPage> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(
-            height: 10,
-          ),
+          const SizedBox(height: 10),
           Center(
             child: Image.asset(
               "assets/images/novation.png",
@@ -55,9 +53,7 @@ class _LoginPageState extends State<LoginPage> {
               width: 150,
             ),
           ),
-          const SizedBox(
-            height: 10,
-          ),
+          const SizedBox(height: 10),
           Center(
             child: Text(
               "Client App",
@@ -67,9 +63,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
           ),
-          const SizedBox(
-            height: 10,
-          ),
+          const SizedBox(height: 10),
           Center(
             child: Text(
               "Login",
@@ -80,9 +74,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
           ),
-          const SizedBox(
-            height: 10,
-          ),
+          const SizedBox(height: 10),
           FormHelper.inputFieldWidget(
             context,
             "Email",
@@ -98,7 +90,6 @@ class _LoginPageState extends State<LoginPage> {
               if (!emailValid) {
                 return "Invalid E-mail";
               }
-
               return null;
             },
             (onSaved) {
@@ -117,10 +108,7 @@ class _LoginPageState extends State<LoginPage> {
             backgroundColor: Colors.grey.shade100,
             borderFocusColor: Colors.grey.shade200,
           ),
-          const SizedBox(
-            height: 10,
-          ),
-          // Update the password input field
+          const SizedBox(height: 10),
           FormHelper.inputFieldWidget(
             context,
             "Password",
@@ -146,7 +134,7 @@ class _LoginPageState extends State<LoginPage> {
             hintColor: Colors.black.withOpacity(.6),
             backgroundColor: Colors.grey.shade100,
             borderFocusColor: Colors.grey.shade200,
-            obscureText: hidePassword, // Add this line
+            obscureText: hidePassword,
             suffixIcon: IconButton(
               icon: Icon(
                 hidePassword ? Icons.visibility_off : Icons.visibility,
@@ -154,15 +142,12 @@ class _LoginPageState extends State<LoginPage> {
               ),
               onPressed: () {
                 setState(() {
-                  hidePassword = !hidePassword; // Toggle password visibility
+                  hidePassword = !hidePassword;
                 });
               },
             ),
           ),
-
-          const SizedBox(
-            height: 10,
-          ),
+          const SizedBox(height: 10),
           Center(
             child: FormHelper.submitButton(
               "Sign In",
@@ -181,15 +166,11 @@ class _LoginPageState extends State<LoginPage> {
                         FormHelper.showSimpleAlertDialog(
                           context,
                           Config.appName,
-                          "User Logged-INn Successfully",
+                          "User Logged-IN Successfully",
                           "ok",
                           () {
                             Navigator.of(context).pop();
-                            Navigator.pushNamedAndRemoveUntil(
-                              context,
-                              "/",
-                              (route) => false,
-                            );
+                            Navigator.pushReplacementNamed(context, "/");
                           },
                         );
                       } else {
@@ -213,24 +194,37 @@ class _LoginPageState extends State<LoginPage> {
               borderRadius: 20,
             ),
           ),
-          const SizedBox(
-            height: 10,
+          const SizedBox(height: 10),
+
+          // Add Forgot Password text here
+          Center(
+            child: GestureDetector(
+              onTap: () {
+                Navigator.of(context).pushNamed('/forgot-password');
+              },
+              child: Text(
+                "Forgot Password?",
+                style: TextStyle(
+                  color: Colors.deepOrangeAccent,
+                  fontWeight: FontWeight.bold,
+                  decoration: TextDecoration.underline,
+                ),
+              ),
+            ),
           ),
+          const SizedBox(height: 10),
+
           Center(
             child: RichText(
               text: TextSpan(
                 children: <TextSpan>[
                   TextSpan(
-                    text: "Dont have an account?",
-                    style: TextStyle(
-                      color: Colors.black,
-                    ),
+                    text: "Don't have an account?",
+                    style: TextStyle(color: Colors.black),
                   ),
                   TextSpan(
-                    text: "Sign Up",
-                    style: TextStyle(
-                      color: Colors.deepOrangeAccent,
-                    ),
+                    text: " Sign Up",
+                    style: TextStyle(color: Colors.deepOrangeAccent),
                     recognizer: TapGestureRecognizer()
                       ..onTap = () {
                         Navigator.of(context).pushNamedAndRemoveUntil(
@@ -242,7 +236,7 @@ class _LoginPageState extends State<LoginPage> {
                 ],
               ),
             ),
-          )
+          ),
         ],
       ),
     );
