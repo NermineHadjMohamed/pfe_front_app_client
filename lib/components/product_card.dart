@@ -13,7 +13,7 @@ class ProductCard extends StatelessWidget {
       width: 150,
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(10), // Rounded corners
+        borderRadius: BorderRadius.circular(10), 
         boxShadow: [
           BoxShadow(
             color: Colors.black26,
@@ -31,7 +31,7 @@ class ProductCard extends StatelessWidget {
             children: [
               GestureDetector(
                 child: ClipRRect(
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(10)), // Rounded top corners
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(10)), 
                   child: SizedBox(
                     height: 100,
                     width: double.infinity,
@@ -70,7 +70,7 @@ class ProductCard extends StatelessWidget {
                       "Price: ${Config.currency}${model!.productPrice.toString()}",
                       style: TextStyle(
                         fontSize: 14,
-                        color: Colors.teal, // Changed color to match the theme
+                        color: Colors.teal, 
                         fontWeight: FontWeight.bold,
                       ),
                     ),

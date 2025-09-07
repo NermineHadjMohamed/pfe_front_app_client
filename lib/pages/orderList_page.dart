@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:client_app/models/order.dart'; // Adjust the import based on your project structure
-import 'package:client_app/api/api_service.dart'; // Import your API service
-import 'package:intl/intl.dart'; // For date formatting
-import 'orderDetails_page.dart'; // Adjust based on your project structure
+import 'package:client_app/models/order.dart'; 
+import 'package:client_app/api/api_service.dart'; 
+import 'package:intl/intl.dart'; 
+import 'orderDetails_page.dart';
 
 class OrderListPage extends StatefulWidget {
   @override
@@ -15,19 +15,18 @@ class _OrderListPageState extends State<OrderListPage> {
   @override
   void initState() {
     super.initState();
-    getOrders(); // Call the method to fetch orders
+    getOrders(); 
   }
 
   Future<void> getOrders() async {
     final apiService = APIService();
-    orders = await apiService.getOrders(); // Adjust the method call based on your APIService
+    orders = await apiService.getOrders(); 
 
-    // Update the UI after fetching orders
     setState(() {});
   }
 
   Color _getStatusColor(String status) {
-    return Colors.blue; // All statuses will be blue
+    return Colors.blue; 
   }
 
   @override

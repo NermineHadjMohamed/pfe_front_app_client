@@ -143,7 +143,6 @@ class _ProductDetailsPageState extends ConsumerState<ProductDetailsPage> {
             onPressed: () {
               final cartViewModel = ref.read(cartItemsProvider.notifier);
               cartViewModel.addCartItem(model.id, quantity);
-              // Show a SnackBar alerting the user that the product was added to the cart
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: const Text(
@@ -155,9 +154,7 @@ class _ProductDetailsPageState extends ConsumerState<ProductDetailsPage> {
                 ),
               );
 
-              // Delay the navigation until after the SnackBar is shown
               Future.delayed(const Duration(seconds: 2), () {
-                // Navigate back to the /products page
                 Navigator.pushReplacementNamed(context, "/");
               });
             },

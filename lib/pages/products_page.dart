@@ -26,10 +26,10 @@ class _ProductsPageState extends State<ProductsPage> {
           "Products",
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        backgroundColor: Colors.teal, // Change to a vibrant color
+        backgroundColor: Colors.teal, 
       ),
       body: Container(
-        color: Colors.white, // Change background color
+        color: Colors.white, 
         padding: const EdgeInsets.all(10),
         child: Column(
           children: [
@@ -82,7 +82,7 @@ class _ProductFilters extends ConsumerWidget {
       height: 60,
       margin: const EdgeInsets.symmetric(vertical: 10),
       decoration: BoxDecoration(
-        color: Colors.teal[100], // Soft background for filter section
+        color: Colors.teal[100], 
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
           BoxShadow(

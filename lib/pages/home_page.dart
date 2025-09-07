@@ -10,21 +10,14 @@ class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   @override
-  /*State<HomePage> createState() => _HomePageState();
-}
 
-class _HomePageState extends State<HomePage> {*/
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
         child: ListView(
           children: [
-            //const HomeCategoriesWidget(),
             const HomeProductsWidget(),
-            //ProductCard(
-            //ProductCard(
-            //model: model,
-            //)
+            
           ],
         ),
       ),
@@ -33,7 +26,6 @@ class _HomePageState extends State<HomePage> {*/
 
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
     throw UnimplementedError();
   }
 }

@@ -18,7 +18,6 @@ class CartItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Using an integer value for quantity
     TextEditingController quantityController =
         TextEditingController(text: model.quantity.toString());
 
@@ -85,7 +84,6 @@ class CartItemWidget extends StatelessWidget {
                       onChanged: (value) {
                         int? newQuantity = int.tryParse(value);
                         if (newQuantity != null && newQuantity > 0) {
-                          // Call the update function when the value changes
                           onQuantityUpdate!(model, newQuantity, "update");
                         }
                       },
@@ -97,10 +95,10 @@ class CartItemWidget extends StatelessWidget {
                     upperLimit: 20,
                     stepValue: 1,
                     iconSize: 15.0,
-                    value: model.quantity.toInt(), // Ensure this is an int
+                    value: model.quantity.toInt(), 
                     onChanged: (value) {
                       int newQuantity =
-                          value["quantity"].toInt(); // Convert to int
+                          value["quantity"].toInt(); 
                       quantityController.text = newQuantity.toString();
                       onQuantityUpdate!(model, newQuantity, value["type"]);
                     },

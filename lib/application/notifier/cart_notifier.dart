@@ -29,18 +29,7 @@ class CartNotifier extends StateNotifier<CartState> {
   Future<void> removeCartItem(productId, quantity) async {
     await _apiService.removeCartItem(productId, quantity);
     getCartItems();
-/*
-    var isCartItemExist = state.cartModel!.products
-        .firstWhere((element) => element.product.id == productId);
 
-    var updatedItems = state.cartModel!;
-
-    updatedItems.products
-        .toList(growable: true)
-        .removeWhere((item) => item.product.id == productId);
-    print("sizeé+ " + updatedItems.products.length.toString());
-    state = state.copyWith(cartModel: updatedItems);
-    */
   }
 
   Future<void> updateQuantity(productId, quantity, type) async {

@@ -63,28 +63,24 @@ class _UserProfilePageState extends State<UserProfilePage> {
                         ),
                         SizedBox(height: 24),
 
-                        // Manager Full Name
                         _buildProfileDetailCard(
                           icon: Icons.person,
                           title: 'Manager Full Name',
                           value: userProfile!['fullName'],
                         ),
 
-                        // Email
                         _buildProfileDetailCard(
                           icon: Icons.email,
                           title: 'Email',
                           value: userProfile!['email'],
                         ),
 
-                        // Phone Number
                         _buildProfileDetailCard(
                           icon: Icons.phone,
                           title: 'Phone Number',
                           value: userProfile!['phoneNumber'],
                         ),
 
-                        // Postal Address
                         _buildProfileDetailCard(
                           icon: Icons.location_on,
                           title: 'Postal Address',
@@ -98,7 +94,6 @@ class _UserProfilePageState extends State<UserProfilePage> {
     );
   }
 
-  // Helper function to build individual profile detail card
   Widget _buildProfileDetailCard(
       {required IconData icon, required String title, required String value}) {
     return Card(

@@ -122,7 +122,7 @@ class _RegisterPageState extends State<RegisterPage> {
               backgroundColor: Colors.grey.shade100,
               borderFocusColor: Colors.grey.shade200),
 
-          // Company Name
+ 
           const SizedBox(height: 10),
           FormHelper.inputFieldWidget(context, "companyName", "Company Name",
               (onValidateVal) {
@@ -146,10 +146,10 @@ class _RegisterPageState extends State<RegisterPage> {
               backgroundColor: Colors.grey.shade100,
               borderFocusColor: Colors.grey.shade200),
 
-          // Country Picker
+
           const SizedBox(height: 10),
           Container(
-            height: 56, // Match the height of input fields
+            height: 56, 
             decoration: BoxDecoration(
               border: Border.all(color: Colors.grey.shade400),
               borderRadius: BorderRadius.circular(10),
@@ -176,7 +176,7 @@ class _RegisterPageState extends State<RegisterPage> {
             ),
           ),
 
-// Phone Number
+
           const SizedBox(height: 10),
           FormHelper.inputFieldWidget(
             context,
@@ -208,7 +208,6 @@ class _RegisterPageState extends State<RegisterPage> {
 
           const SizedBox(height: 10),
 
-          // Postal Address
           FormHelper.inputFieldWidget(
               context, "postalAddress", "Postal Address", (onValidateVal) {
             if (onValidateVal.isEmpty) {
@@ -231,7 +230,6 @@ class _RegisterPageState extends State<RegisterPage> {
               backgroundColor: Colors.grey.shade100,
               borderFocusColor: Colors.grey.shade200),
 
-          // Email
           const SizedBox(height: 10),
           FormHelper.inputFieldWidget(context, "email", "E-mail",
               (onValidateVal) {
@@ -351,8 +349,6 @@ class _RegisterPageState extends State<RegisterPage> {
               confirmPassword = val;
             },
           ),
-
-          // Register Button
           const SizedBox(height: 20),
           Center(
             child: FormHelper.submitButton(

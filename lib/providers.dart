@@ -1,4 +1,3 @@
-// category_provider.dart
 import 'package:client_app/api/api_service.dart';
 import 'package:client_app/application/notifier/cart_notifier.dart';
 import 'package:client_app/application/notifier/order_notifier.dart';
@@ -19,7 +18,6 @@ final categoriesProvider =
     FutureProvider.family<List<Category>?, PaginationModel>(
   (ref, paginationModel) {
     final apiRepository = ref.watch(apiService);
-    // Directly call the static method on APIService
     return apiRepository.getCategories(
       paginationModel.page,
       paginationModel.pageSize,
@@ -31,7 +29,6 @@ final homeProductProvider =
     FutureProvider.family<List<Product>?, ProductFilterModel>(
   (ref, productFilterModel) {
     final apiRepository = ref.watch(apiService);
-    // Directly call the static method on APIService
     return apiRepository.getProducts(productFilterModel);
   },
 );

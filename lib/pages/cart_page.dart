@@ -107,7 +107,7 @@ class _CheckoutBottomNavbar extends ConsumerWidget {
                   ),
                 ),
                 onTap: () async {
-                  // Show confirmation dialog before creating the order
+                
                   final bool confirm = await showDialog(
                     context: context,
                     builder: (BuildContext context) {
@@ -120,14 +120,14 @@ class _CheckoutBottomNavbar extends ConsumerWidget {
                             child: const Text('Cancel'),
                             onPressed: () {
                               Navigator.of(context)
-                                  .pop(false); // Return false if canceled
+                                  .pop(false); 
                             },
                           ),
                           TextButton(
                             child: const Text('Confirm'),
                             onPressed: () {
                               Navigator.of(context)
-                                  .pop(true); // Return true if confirmed
+                                  .pop(true); 
                             },
                           ),
                         ],
@@ -135,10 +135,10 @@ class _CheckoutBottomNavbar extends ConsumerWidget {
                     },
                   );
 
-                  // If the user confirms, proceed to create the order
+                  
                   if (confirm) {
                     try {
-                      // Show loading spinner
+                     
                       showDialog(
                         context: context,
                         barrierDismissible: false,
@@ -149,11 +149,11 @@ class _CheckoutBottomNavbar extends ConsumerWidget {
                         },
                       );
 
-                      // API call to create order
+                    
                       await APIService().createOrder(
                         cartProvider.cartModel!.userId,
                         cartProvider.cartModel!.grandTotal,
-                        'created', // Initial status of the order
+                        'created', 
                         cartProvider.cartModel!.products.map((item) {
                           return {
                             'product': item.product.id,
@@ -163,16 +163,13 @@ class _CheckoutBottomNavbar extends ConsumerWidget {
                         }).toList(),
                       );
 
-                      // Hide loading spinner
+                     
                       Navigator.of(context).pop();
 
-                      // Navigate to success page
+                      
                       Navigator.of(context).pushNamed("/order-success");
                     } catch (error) {
-                      // Hide loading spinner
                       Navigator.of(context).pop();
-
-                      // Show error message in case of failure
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                             content: Text("Order creation failed: $error")),

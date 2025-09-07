@@ -254,30 +254,30 @@ final FlutterSecureStorage _storage = FlutterSecureStorage();
   Future<bool?> addCartItem(String productId, int quantity) async {
     try {
       var loginDetails = await SharedService
-          .loginDetails(); // Récupérer les détails de l'utilisateur connecté
+          .loginDetails(); 
 
       if (loginDetails != null) {
         print(
-            'Login details: ${loginDetails.data}'); // Ajouter un log pour vérifier les détails du login
+            'Login details: ${loginDetails.data}'); 
 
-        String? userId = loginDetails.data.userId; // Extraire le userId
-        print('UserId: $userId'); // Loguer le userId pour voir s'il est correct
+        String? userId = loginDetails.data.userId; 
+        print('UserId: $userId'); 
 
         Map<String, String> requestHeaders = {
           'Content-Type': 'application/json',
           'Authorization':
-              'Basic ${loginDetails.data.token.toString()}', // Token d'autorisation
+              'Basic ${loginDetails.data.token.toString()}', 
         };
 
         var url = Uri.https(
-            Config.apiURL, Config.cartAPI); // Construire l'URL de l'API
+            Config.apiURL, Config.cartAPI); 
 
         var response = await client.post(
           url,
           headers: requestHeaders,
           body: jsonEncode(
             {
-              "userId": userId, // Inclure le userId dans le corps de la requête
+              "userId": userId, 
               "products": [
                 {
                   "product": productId,
@@ -289,9 +289,9 @@ final FlutterSecureStorage _storage = FlutterSecureStorage();
         );
 
         if (response.statusCode == 200) {
-          return true; // L'ajout au panier a réussi
+          return true; 
         } else if (response.statusCode == 401) {
-          // Redirection si l'utilisateur n'est pas autorisé
+          
           navigatorKey.currentState?.pushNamedAndRemoveUntil(
             "/login",
             (route) => false,
@@ -301,7 +301,7 @@ final FlutterSecureStorage _storage = FlutterSecureStorage();
         }
       } else {
         print('Login details are null');
-        return null; // Gestion si loginDetails est null
+        return null; 
       }
     } catch (error) {
       print('Error: $error');
@@ -309,47 +309,7 @@ final FlutterSecureStorage _storage = FlutterSecureStorage();
     }
   }
 
-  // Future<bool?> addCartItem(productId, quantity) async {
-  //   try {
-  //     var loginDetails = await SharedService.loginDetails();
-
-  //     Map<String, String> requestHeaders = {
-  //       'Content-Type': 'application/json',
-  //       'Authorization': 'Basic ${loginDetails!.data.token.toString()}'
-  //     };
-
-  //     var url = Uri.https(Config.apiURL, Config.cartAPI);
-
-  //     var response = await client.post(
-  //       url,
-  //       headers: requestHeaders,
-  //       body: jsonEncode(
-  //         {
-  //           "products": [
-  //             {
-  //               "product": productId,
-  //               "quantity": quantity,
-  //             }
-  //           ]
-  //         },
-  //       ),
-  //     );
-
-  //     if (response.statusCode == 200) {
-  //       return true;
-  //     } else if (response.statusCode == 401) {
-  //       navigatorKey.currentState?.pushNamedAndRemoveUntil(
-  //         "/login",
-  //         (route) => false,
-  //       );
-  //     } else {
-  //       return null;
-  //     }
-  //   } catch (error) {
-  //     print(error);
-  //   }
-  // }
-
+ 
   Future<bool?> removeCartItem(productId, quantity) async {
     var loginDetails = await SharedService.loginDetails();
 
@@ -424,7 +384,7 @@ final FlutterSecureStorage _storage = FlutterSecureStorage();
     }
   }
 
-  // Method to update an order
+  
   Future<bool> updateOrder(String orderId, String transactionId) async {
     var url = Uri.https(Config.apiURL, Config.orderAPI);
     var response = await client.put(
@@ -440,11 +400,10 @@ final FlutterSecureStorage _storage = FlutterSecureStorage();
   }
 
   Future<void> logout() async {
-    final String? token = await _storage.read(key: 'token'); // Retrieve the token
-
+    final String? token = await _storage.read(key: 'token'); 
     if (token != null) {
       final response = await http.post(
-        Uri.https(Config.apiURL, '/logout'), // Update with your logout endpoint
+        Uri.https(Config.apiURL, '/logout'), 
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
@@ -452,10 +411,10 @@ final FlutterSecureStorage _storage = FlutterSecureStorage();
       );
 
       if (response.statusCode == 200) {
-        // Successful logout, remove the token from storage
+        
         await _storage.delete(key: 'token');
         print('Logged out successfully');
-        // Navigate to the login page or do any necessary cleanup
+        
       } else {
         print('Logout failed: ${response.body}');
       }

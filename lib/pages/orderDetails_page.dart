@@ -6,7 +6,6 @@ class OrderDetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Retrieve the passed order object
     final Order order = ModalRoute.of(context)!.settings.arguments as Order;
 
     return Scaffold(
@@ -41,12 +40,12 @@ class OrderDetailsPage extends StatelessWidget {
               ListView.builder(
                 shrinkWrap: true,
                 physics:
-                    NeverScrollableScrollPhysics(), // Prevent scrolling in the inner list
+                    NeverScrollableScrollPhysics(), 
                 itemCount: order.products.length,
                 itemBuilder: (context, index) {
                   final productItem = order.products[index];
                   final product =
-                      productItem.product; // Access the nested product object
+                      productItem.product; 
 
                   return Card(
                     margin: EdgeInsets.symmetric(vertical: 8),

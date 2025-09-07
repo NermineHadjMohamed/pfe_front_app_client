@@ -1,12 +1,12 @@
 import 'package:client_app/api/api_service.dart';
-import 'package:client_app/application/state/order_state.dart'; // Ensure this is correct
-import 'package:client_app/models/order.dart'; // Ensure this is correct
+import 'package:client_app/application/state/order_state.dart'; 
+import 'package:client_app/models/order.dart'; 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class OrderNotifier extends StateNotifier<OrderState> {
   final APIService _apiService;
 
-  OrderNotifier(this._apiService) : super(OrderState()); // Use OrderState() instead of const OrderState.initial()
+  OrderNotifier(this._apiService) : super(OrderState()); 
 
   Future<void> createOrder(
     String userId,

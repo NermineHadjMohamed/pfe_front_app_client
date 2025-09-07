@@ -29,10 +29,10 @@ class HomeProductsWidget extends ConsumerWidget {
                     Text(
                       "Products",
                       style: TextStyle(
-                        fontSize: 24, // Increased font size
+                        fontSize: 24, 
                         fontWeight: FontWeight.bold,
-                        color: Colors.teal, // Changed text color
-                        letterSpacing: 1.2, // Added letter spacing
+                        color: Colors.teal, 
+                        letterSpacing: 1.2, 
                       ),
                     ),
                   ],
@@ -84,7 +84,7 @@ class HomeProductsWidget extends ConsumerWidget {
           var data = products[index];
           return GestureDetector(
             onTap: () {
-              // Handle product tap
+              
             },
             child: ProductCard(
               model: data,

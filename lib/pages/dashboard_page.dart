@@ -22,7 +22,7 @@ class _DashboardPageState extends State<DashboardPage> {
   int index = 0;
 
   void _logout() async {
-    // Implement your logout logic here (e.g., clear tokens, etc.)
+
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(builder: (context) => LoginPage()),
